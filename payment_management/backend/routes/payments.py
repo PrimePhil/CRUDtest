@@ -101,6 +101,14 @@ def update_payment(payment_id: str, update_data: PaymentUpdate):
 
     return updated_payment
 
+@router.get("/{payment_id}")
+def get_payment_by_id(payment_id: str):
+    payment = payments_collection.find_one({"_id": ObjectId(payment_id)})
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment not found.")
+    payment["_id"] = str(payment["_id"])
+    return payment
+
 
 @router.delete("/{payment_id}")
 def delete_payment(payment_id: str):
@@ -140,3 +148,4 @@ def download_evidence(payment_id: str):
             "Content-Disposition": f"attachment; filename={payment_id}"
         }
     )
+

@@ -1,0 +1,54 @@
+<form [formGroup]="addPaymentForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>First Name</label>
+      <input formControlName="payee_first_name" />
+    </div>
+    <div>
+      <label>Last Name</label>
+      <input formControlName="payee_last_name" />
+    </div>
+  
+    <div>
+      <label>Due Date</label>
+      <input formControlName="payee_due_date" type="date" />
+    </div>
+  
+    <div>
+      <label>Address Line 1</label>
+      <input formControlName="payee_address_line_1" />
+    </div>
+    <div>
+      <label>Address Line 2</label>
+      <input formControlName="payee_address_line_2" />
+    </div>
+  
+    <div>
+      <label>Country</label>
+      <select formControlName="payee_country">
+        <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+      </select>
+    </div>
+  
+    <div>
+      <label>Currency</label>
+      <select formControlName="currency">
+        <option *ngFor="let curr of currencies" [value]="curr">{{ curr }}</option>
+      </select>
+    </div>
+  
+    <div>
+      <label>Due Amount</label>
+      <input formControlName="due_amount" type="number" />
+    </div>
+    <div>
+      <label>Discount Percent</label>
+      <input formControlName="discount_percent" type="number" />
+    </div>
+    <div>
+      <label>Tax Percent</label>
+      <input formControlName="tax_percent" type="number" />
+    </div>
+  
+    <button type="submit">Create Payment</button>
+  </form>
+  

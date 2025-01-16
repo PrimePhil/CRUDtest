@@ -1,0 +1,29 @@
+<p>edit-payment works!</p>
+<form [formGroup]="editPaymentForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Due Date</label>
+      <input formControlName="payee_due_date" type="date" />
+    </div>
+  
+    <div>
+      <label>Due Amount</label>
+      <input formControlName="due_amount" type="number" />
+    </div>
+  
+    <div>
+      <label>Status</label>
+      <select formControlName="payee_payment_status">
+        <option value="pending">Pending</option>
+        <option value="due_now">Due Now</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+  
+    <div *ngIf="editPaymentForm.controls['payee_payment_status'].value === 'completed'">
+      <label>Upload Evidence (PDF/PNG/JPG)</label>
+      <input type="file" (change)="onFileSelected($event)" />
+    </div>
+  
+    <button type="submit">Update Payment</button>
+  </form>
+  

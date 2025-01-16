@@ -1,0 +1,55 @@
+<div class="filter-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      placeholder="Search..."
+      (ngModelChange)="onSearchChange()"
+    />
+  
+    <select [(ngModel)]="statusFilter" (change)="onStatusFilterChange()">
+      <option value="">All Statuses</option>
+      <option value="pending">Pending</option>
+      <option value="due_now">Due Now</option>
+      <option value="overdue">Overdue</option>
+      <option value="completed">Completed</option>
+    </select>
+  </div>
+  
+  <div>Total (All Rows) = {{ totalDue | number:'1.2-2' }}</div>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Payee</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Due Date</th>
+        <th>Due Amount</th>
+        <th>Total Due</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of payments">
+        <td>{{ p.payee_first_name }} {{ p.payee_last_name }}</td>
+        <td>{{ p.payee_email }}</td>
+        <td>{{ p.payee_payment_status }}</td>
+        <td>{{ p.payee_due_date }}</td>
+        <td>{{ p.due_amount | number:'1.2-2' }}</td>
+        <td>{{ p.total_due | number:'1.2-2' }}</td>
+        <td>
+            <a [routerLink]="['/payments', 'edit', p._id!]">Edit</a>
+
+            <input type="file" (change)="onUploadEvidence(p._id!, $event)" />
+            <button (click)="onDownloadEvidence(p._id!)">Download Evidence</button>
+            <button (click)="onDeletePayment(p._id!)">Delete</button>            
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div>
+    <button (click)="prevPage()">Previous</button>
+    <button (click)="nextPage()">Next</button>
+  </div>
+  

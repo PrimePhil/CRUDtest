@@ -20,14 +20,25 @@ def calculate_total_due(due_amount: float, discount_percent: float, tax_percent:
     taxed = discounted + (discounted * tax_percent / 100.0)
     return round(taxed, 2)
 
+from datetime import date
+
 def adjust_payment_status(payment):
     today_ = date.today()
-    if payment.get("payee_due_date"):
-        if payment["payee_due_date"] == today_ and payment["payee_payment_status"] != "completed":
-            payment["payee_payment_status"] = "due_now"
-        elif payment["payee_due_date"] < today_ and payment["payee_payment_status"] != "completed":
-            payment["payee_payment_status"] = "overdue"
+    
+    due_str = payment.get("payee_due_date")
+
+    if isinstance(due_str, str):
+        due_date_obj = date.fromisoformat(due_str)
+    else:
+        due_date_obj = due_str
+
+    if due_date_obj == today_ and payment["payee_payment_status"] != "completed":
+        payment["payee_payment_status"] = "due_now"
+    elif due_date_obj and due_date_obj < today_ and payment["payee_payment_status"] != "completed":
+        payment["payee_payment_status"] = "overdue"
+    
     return payment
+
 
 
 @router.get("/")
@@ -62,6 +73,7 @@ def get_payments(
             p.get("tax_percent", 0)
         )
         p["total_due"] = total_due
+        p["_id"] = str(p["_id"])
 
         payments_collection.update_one(
             {"_id": p["_id"]},

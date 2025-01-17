@@ -1,11 +1,19 @@
 import uvicorn
 import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from payment_management.backend.routes import payments
 from payment_management.backend.services import normalize_csv_and_store
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],  # for angular
+    allow_credentials=True,
+    allow_methods=["*"],       # allow all for this test
+    allow_headers=["*"],       
+)
 app.include_router(payments.router)
 
 @app.on_event("startup")

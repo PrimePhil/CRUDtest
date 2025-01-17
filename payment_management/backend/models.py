@@ -5,7 +5,7 @@ from datetime import date, datetime
 class PaymentBase(BaseModel):
     payee_first_name: str
     payee_last_name: str
-    payee_payment_status: str
+    payee_payment_status: str  # e.g. "completed", "due_now", "overdue", "pending"
     payee_added_date_utc: Optional[datetime]
     payee_due_date: date
     payee_address_line_1: str
@@ -22,7 +22,7 @@ class PaymentBase(BaseModel):
     due_amount: float
 
 class PaymentCreate(PaymentBase):
-    """ placeholder """
+    """Used when creating a new payment."""
 
 class PaymentUpdate(BaseModel):
     payee_due_date: Optional[date]
@@ -32,3 +32,6 @@ class PaymentUpdate(BaseModel):
 class PaymentResponse(PaymentBase):
     id: str = Field(..., alias="_id")
     total_due: Optional[float]
+
+    class Config:
+        allow_population_by_field_name = True

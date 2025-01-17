@@ -39,6 +39,10 @@ export class EditPaymentComponent implements OnInit {
     });
   }
 
+  onBack() {
+    this.router.navigate(['/payments']);
+  }
+
   loadPayment() {
     this.paymentsService.getPaymentById(this.paymentId).subscribe({
       next: (payment: Payment) => {

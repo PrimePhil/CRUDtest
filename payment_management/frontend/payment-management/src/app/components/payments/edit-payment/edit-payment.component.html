@@ -1,5 +1,7 @@
-<p>edit-payment works!</p>
+
 <form [formGroup]="editPaymentForm" (ngSubmit)="onSubmit()">
+    <button (click)="onBack()">Back</button>
+
     <div>
       <label>Due Date</label>
       <input formControlName="payee_due_date" type="date" />

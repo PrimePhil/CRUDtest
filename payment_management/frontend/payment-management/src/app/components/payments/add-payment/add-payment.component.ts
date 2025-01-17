@@ -3,13 +3,18 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PaymentsService } from '../../../services/payments.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-payment',
   templateUrl: './add-payment.component.html',
   styleUrls: ['./add-payment.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HttpClientModule
+  ]
 })
 export class AddPaymentComponent implements OnInit {
   addPaymentForm!: FormGroup;
@@ -19,7 +24,8 @@ export class AddPaymentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private paymentsService: PaymentsService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -48,14 +54,29 @@ export class AddPaymentComponent implements OnInit {
     });
   }
 
-  loadCountries() {
-    this.countries = ['US', 'CA', 'GB', 'FR', '...'];
+  onBack() {
+    this.router.navigate(['/payments']);
   }
+
+  loadCountries() {
+    this.http.get<any[]>('https://restcountries.com/v3.1/all')
+      .subscribe({
+        next: (res) => {
+          this.countries = res
+            .map(country => country.name?.common)
+            .filter(name => !!name)
+            .sort();
+        },
+        error: (err) => {
+          console.error('Error loading countries:', err);
+        }
+      });
+  }  
 
   loadCurrencies() {
-    this.currencies = ['USD', 'CAD', 'EUR', 'GBP'];
+    this.currencies = ['USD', 'CAD', 'EUR', 'GBP', 'AUD', 'NZD', 'JPY'];
   }
-
+  
   onSubmit() {
     if (this.addPaymentForm.invalid) {
       this.addPaymentForm.markAllAsTouched();
@@ -65,7 +86,7 @@ export class AddPaymentComponent implements OnInit {
     const newPaymentData = this.addPaymentForm.value;
 
     this.paymentsService.createPayment(newPaymentData).subscribe({
-      next: (res) => {
+      next: () => {
         alert('Payment created successfully!');
         this.router.navigate(['/payments']);
       },

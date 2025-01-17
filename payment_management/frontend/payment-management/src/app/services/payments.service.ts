@@ -33,8 +33,8 @@ export class PaymentsService {
     return this.http.post(this.baseUrl, payment);
   }
 
-  updatePayment(paymentId: string, data: Partial<Payment>): Observable<Payment> {
-    return this.http.put<Payment>(`${this.baseUrl}/${paymentId}`, data);
+  updatePayment(paymentId: string, data: Partial<Payment>) {
+    return this.http.put<Payment>(`${this.baseUrl}/edit/${paymentId}`, data);
   }
 
   deletePayment(paymentId: string): Observable<any> {

@@ -24,21 +24,16 @@ from datetime import date
 
 def adjust_payment_status(payment):
     today_ = date.today()
-    
-    due_str = payment.get("payee_due_date")
-
-    if isinstance(due_str, str):
-        due_date_obj = date.fromisoformat(due_str)
-    else:
-        due_date_obj = due_str
+    due_date_str = payment["payee_due_date"]
+    due_date_obj = date.fromisoformat(due_date_str)
 
     if due_date_obj == today_ and payment["payee_payment_status"] != "completed":
         payment["payee_payment_status"] = "due_now"
-    elif due_date_obj and due_date_obj < today_ and payment["payee_payment_status"] != "completed":
+    elif due_date_obj < today_ and payment["payee_payment_status"] != "completed":
         payment["payee_payment_status"] = "overdue"
-    
+    elif due_date_obj > today_ and payment["payee_payment_status"] != "completed":
+        payment["payee_payment_status"] = "pending"
     return payment
-
 
 
 @router.get("/")
@@ -101,6 +96,10 @@ def update_payment(payment_id: str, update_data: PaymentUpdate):
             raise HTTPException(status_code=400, detail="Cannot mark as completed without evidence.")
     
     update_dict = {k: v for k, v in update_data.model_dump(exclude_unset=True).items() if v is not None}
+
+    if update_data.payee_due_date is not None:
+        iso_date_str = update_data.payee_due_date.isoformat()
+        update_data.payee_due_date = iso_date_str
 
     updated_payment = payments_collection.find_one_and_update(
         {"_id": ObjectId(payment_id)},

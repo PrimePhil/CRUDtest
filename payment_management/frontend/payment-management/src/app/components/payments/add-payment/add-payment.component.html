@@ -1,4 +1,6 @@
 <form [formGroup]="addPaymentForm" (ngSubmit)="onSubmit()">
+    <button (click)="onBack()">Back</button>
+
     <div>
       <label>First Name</label>
       <input formControlName="payee_first_name" />

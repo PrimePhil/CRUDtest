@@ -3,7 +3,7 @@ import { PaymentsService } from '../../../services/payments.service';
 import { Payment } from '../../../models/payment.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -24,7 +24,7 @@ export class MainComponent implements OnInit {
   limit = 10;
   totalDue = 0;
 
-  constructor(private paymentsService: PaymentsService) {}
+  constructor(private paymentsService: PaymentsService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchPayments();
@@ -43,6 +43,10 @@ export class MainComponent implements OnInit {
           console.error('Error fetching payments:', err);
         },
       });
+  }
+
+  onAddPayment() {
+    this.router.navigate(['/payments/add']);
   }
 
   onSearchChange() {

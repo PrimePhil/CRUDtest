@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "ng build --configuration production"
+  },
   "devDependencies": {
     "@angular/cli": "^19.1.2"
   }
